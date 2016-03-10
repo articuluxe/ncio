@@ -1,0 +1,6 @@
+#ifndef __VERSION_CONFIG_H__
+#define __VERSION_CONFIG_H__
+
+#define NCIO_VERSION @NCIO_VERSION@
+
+#endif    /* #ifndef __VERSION_CONFIG_H__ */
