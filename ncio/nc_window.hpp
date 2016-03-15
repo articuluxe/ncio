@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-11 07:35:44 dharms>
+// Modified Time-stamp: <2016-03-14 07:25:40 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -37,17 +37,36 @@ namespace ncio {
 using coord = std::tuple<int, int>;
 using bounds = std::tuple<int, int>;
 
-void del_win(WINDOW* win);
-using window = std::shared_ptr<WINDOW>;
-inline window make_window(coord origin, bounds extent)
+//----------------------------------------------------------------------------
+//---- window ----------------------------------------------------------------
+//----------------------------------------------------------------------------
+class window
 {
-   return window(newwin(
-         std::get<0>(origin), std::get<1>(origin),
-         std::get<0>(extent), std::get<1>(extent))
-      , del_win);
-}
+ public:
+   /* window(WINDOW* win) : win_(win) */
+   window(coord origin, bounds extent)
+      : win_(newwin(std::get<1>(origin), std::get<0>(origin),
+            std::get<0>(extent), std::get<1>(extent)))
+   {}
+   ~window() { delwin(win_); }
 
-inline void del_win(WINDOW* win) {delwin(win);}
+ private:
+   WINDOW* win_;
+};
+
+/* void del_win(WINDOW* win); */
+
+using window_ptr = std::shared_ptr<WINDOW>;
+
+/* inline window_ptr make_window(coord origin, bounds extent) */
+/* { */
+/*    return window_ptr(window(newwin( */
+/*             std::get<0>(origin), std::get<1>(origin), */
+/*             std::get<0>(extent), std::get<1>(extent))) */
+/*       , del_win); */
+/* } */
+
+/* inline void del_win(WINDOW* win) {delwin(win);} */
 
 }   // end namespace ncio
 

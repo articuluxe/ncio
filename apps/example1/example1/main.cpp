@@ -1,7 +1,7 @@
 #include <iostream>
 #include <ncio/ncio.hpp>
 
-int main(int argc, char* argv[])
+int main(int /* argc */, char* /* argv */[])
 {
 
    ncio::engine e;

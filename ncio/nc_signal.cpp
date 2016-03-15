@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-11 07:36:31 dharms>
+// Modified Time-stamp: <2016-03-11 07:38:49 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -49,8 +49,7 @@ void signal_handler::register_cb(int sig
    , callback cb)
 {
    signal(sig, onsig);
-   cb_.insert(decltype(cb_)::value_type(
-         sig, cb));
+   cb_.insert(decltype(cb_)::value_type(sig, cb));
 }
 
 void signal_handler::on_signal(int sig)

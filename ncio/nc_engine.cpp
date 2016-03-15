@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-10 18:27:32 dharms>
+// Modified Time-stamp: <2016-03-14 07:38:28 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -37,12 +37,15 @@ namespace ncio {
 //----------------------------------------------------------------------------
 engine::engine()
 {
+   initscr();
    signal_handler::inst().register_cb(SIGWINCH,
       std::bind(&engine::on_bounds_changed, this, std::placeholders::_1));
 }
 
 engine::~engine()
-{}
+{
+   endwin();
+}
 
 void engine::on_bounds_changed(int /* sig */)
 {}

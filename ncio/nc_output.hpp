@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-11 07:20:49 dharms>
+// Modified Time-stamp: <2016-03-14 07:36:45 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -87,8 +87,11 @@ class output
    bool init(config& cfg);
 };
 
-inline bool output::init(config& /* cfg */)
-{return true;}
+inline bool output::init(config& cfg)
+{
+   curs_set(cfg.show_cursor ? TRUE : FALSE);
+   return true;
+}
 
 }   // end namespace ncio
 
