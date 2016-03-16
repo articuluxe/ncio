@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-14 07:38:30 dharms>
+// Modified Time-stamp: <2016-03-15 07:13:41 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -44,7 +44,7 @@ class engine
    engine();
    ~engine();
 
-   bool init();
+   bool init(config cfg = config{});
    void cleanup()
    {}
 
@@ -57,8 +57,9 @@ class engine
    void on_bounds_changed(int sig);
 };
 
-inline bool engine::init()
+inline bool engine::init(config cfg /* = config{} */)
 {
+   cfg_ = cfg;
    if (!inp_.init(cfg_))
       return false;
    if (!outp_.init(cfg_))

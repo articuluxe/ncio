@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-14 07:36:45 dharms>
+// Modified Time-stamp: <2016-03-15 17:51:35 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -42,16 +42,55 @@ namespace ncio {
 class buf : public std::stringbuf
 {
  public:
+   buf(window_ptr win) : win_(win)
+   {}
+   buf(buf&& rhs)
+      : std::stringbuf(std::move(rhs))
+      , win_(rhs.win_)
+   {}
+   ~buf() { sync(); }
 
    int sync() override;
+
+   window_ptr get_win() { return win_; }
+
+ private:
+   window_ptr win_ = nullptr;
+};
+
+struct buf_wrapper
+{
+   buf b;
+   buf_wrapper(window_ptr w) : b(w) {}
+   buf_wrapper(buf_wrapper&& rhs)
+      : b(std::move(rhs.b))
+   {}
 };
 
 //----------------------------------------------------------------------------
 //---- stream ----------------------------------------------------------------
 //----------------------------------------------------------------------------
+/* class stream : private buf_wrapper */
+/*              , public std::ostream */
 class stream : public std::ostream
 {
  public:
+   stream(window_ptr win)
+      : std::ostream(&buf_)
+      , buf_(win)
+      /* : buf_wrapper(win) */
+      /* , std::ostream(&b) */
+   {
+      iword(index()) = 1;
+   }
+   stream(stream&& rhs)
+      /* : buf_wrapper(std::move(rhs)) */
+      /* , std::ostream(std::move(rhs)) */
+      : buf_(std::move(rhs.buf_))
+   {}
+
+   window_ptr get_win() { return buf_.get_win(); }
+
    static int index()
    {
       static const int index = std::ios_base::xalloc();
@@ -68,15 +107,28 @@ class stream : public std::ostream
 class str
 {
  public:
-   str(window win)
+   str(window_ptr win)
       : win_(win)
    {}
 
-   stream operator()();
+   stream operator()() const { return stream(win_); }
 
  private:
-   window win_;
+   window_ptr win_;
 };
+
+inline std::ostream& operator<<(std::ostream& out, coord where)
+{
+   if (out.iword(stream::index()))
+   {
+      wmove(*static_cast<stream&>(out).get_win()
+         , std::get<1>(where), std::get<0>(where));
+   }
+   return out;
+}
+
+inline std::ostream& bold(std::ostream& out)
+{attron(A_BOLD); return out;}
 
 //----------------------------------------------------------------------------
 //---- output ----------------------------------------------------------------

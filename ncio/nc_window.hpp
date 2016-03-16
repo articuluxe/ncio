@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-14 07:25:40 dharms>
+// Modified Time-stamp: <2016-03-16 06:16:09 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -34,8 +34,21 @@
 
 namespace ncio {
 
-using coord = std::tuple<int, int>;
-using bounds = std::tuple<int, int>;
+//----------------------------------------------------------------------------
+//---- coord -----------------------------------------------------------------
+//----------------------------------------------------------------------------
+struct coord : std::tuple<int, int>
+{
+   coord(int x, int y) : std::tuple<int, int>(y, x) {}
+};
+
+//----------------------------------------------------------------------------
+//---- bounds ----------------------------------------------------------------
+//----------------------------------------------------------------------------
+struct bounds : std::tuple<int, int>
+{
+   bounds(int x,  int y) : std::tuple<int, int>(y, x) {}
+};
 
 //----------------------------------------------------------------------------
 //---- window ----------------------------------------------------------------
@@ -43,20 +56,39 @@ using bounds = std::tuple<int, int>;
 class window
 {
  public:
-   /* window(WINDOW* win) : win_(win) */
-   window(coord origin, bounds extent)
-      : win_(newwin(std::get<1>(origin), std::get<0>(origin),
-            std::get<0>(extent), std::get<1>(extent)))
+   window(bounds extent, coord origin)
+      : win_(newwin(std::get<1>(extent), std::get<0>(extent),
+            std::get<1>(origin), std::get<0>(origin)))
    {}
-   ~window() { delwin(win_); }
+   window(WINDOW* win)
+      : win_(win)
+   {}
+
+   ~window()
+   {
+      if (win_ != stdscr)
+         delwin(win_);
+   }
+
+   operator WINDOW*() const { return win_; }
+
+   void refresh() { wrefresh(win_); }
+
+   void make_box(int x, int y)
+   { box(win_, x, y); }
 
  private:
    WINDOW* win_;
 };
 
-/* void del_win(WINDOW* win); */
 
-using window_ptr = std::shared_ptr<WINDOW>;
+/* inline void del_win(WINDOW* /\* win *\/) */
+/* {} */
+
+using window_ptr = std::shared_ptr<window>;
+
+inline window_ptr make_std_win()
+{return std::shared_ptr<window>(new ncio::window(stdscr));}
 
 /* inline window_ptr make_window(coord origin, bounds extent) */
 /* { */

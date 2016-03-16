@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-10 17:44:32 dharms>
+// Modified Time-stamp: <2016-03-16 06:15:20 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -31,6 +31,8 @@ namespace ncio {
 
 int buf::sync()
 {
+   wprintw(*win_, str().c_str());
+   str("");
    return 0;
 }
 
