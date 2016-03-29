@@ -1,32 +1,69 @@
 #include <iostream>
 #include <ncio/ncio.hpp>
+#include <ncio/nc_engine.hpp>
+
+class example_app : public ncio::engine<example_app>
+{
+ public:
+   /* bool init(ncio::config& cfg); */
+   void prerun();
+   bool loop(ncio::input_event event);
+
+   /* void preframe(); */
+   /* void frame(); */
+   //  void postrun();
+
+ private:
+   ncio::window_ptr win_;
+};
+
+/* bool example_app::init(ncio::config& cfg) */
+/* {return ncio::engine<example_app>::init(cfg);} */
+
+void example_app::prerun()
+{
+   win_ = std::make_shared<ncio::window>(
+      ncio::bounds(25, 25), ncio::coord(1, 1));
+      /* ncio::make_std_win(); */
+   get_ctx().get_display().add_win(win_);
+   win_->make_box(0, 0);
+}
+
+bool example_app::loop(ncio::input_event event)
+{
+   ncio::input::string str;     /*todo*/
+
+   ncio::output::string log(win_);
+   log() << ncio::coord(1, 18) << "Entered " << str.str();
+   return true;
+}
+
+/* void example_app::preframe() */
+/* {get_ctx().get_input().read_raw();} */
+
+/* void example_app::frame() */
+/* { */
+/* } */
+
+/* void example_app::postrun() */
+/* {} */
 
 int main(int /* argc */, char* /* argv */[])
 {
-   ncio::engine e;
+   example_app app;
    ncio::config cfg;
    /* cfg.show_cursor = true; */
-   if (false == e.init(cfg))
+   if (false == app.init(cfg))
       return 1;
 
-   ncio::window_ptr window =
-   /*    std::make_shared<ncio::window>( */
-   /*       ncio::bounds(25, 25), ncio::coord(1, 1)); */
-      ncio::make_std_win();
+   app.run();
 
-   window->make_box(0, 0);
-   window->refresh();
+   /* refresh(); */
+   /* window->refresh(); */
 
-   ncio::str log(window);
 
-   ncio::input::string str;
-   str.read();
-   log() << ncio::coord(1, 18) << "Entered " << str.str();
+   /* window->refresh(); */
 
-   window->refresh();
-
-//   refresh();
-   ncio::input::read_raw();
 
    return 0;
 }

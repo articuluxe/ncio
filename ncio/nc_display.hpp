@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-11 07:18:00 dharms>
+// Modified Time-stamp: <2016-03-17 17:53:40 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -29,8 +29,10 @@
 #define __NCIO_NC_DISPLAY_HPP__
 
 #include "nc_window.hpp"
+#include "nc_input.hpp"
 #include "nc_config.hpp"
-
+#include <algorithm>
+#include <vector>
 #include <ncurses.h>
 
 namespace ncio {
@@ -44,6 +46,11 @@ class display
    bool init(config& cfg);
    void cleanup()
    {}
+   input& get_input() { return inp_; }
+   input_event read_event();
+
+   void prerun();
+   void postloop();
 
    void on_bounds_updated();
    struct screen
@@ -51,14 +58,49 @@ class display
       coord get_bounds();
    };
 
+   void add_win(window_ptr win);
+
+   template <typename Fun>
+   void apply_win(Fun fun)
+   {
+      std::for_each(wins_.begin(), wins_.end(), fun);
+   }
+
+ private:
+   input inp_;
+   std::vector<window_ptr> wins_;
+   window_ptr curr_;
 };
 
 inline bool display::init(config& cfg)
 {
+   if (!inp_.init(cfg_))
+      return false;
    if (!cfg.show_cursor)
       curs_set(FALSE);
    return true;
 }
+
+inline input_event display::read_event()
+{
+   if (curr_)
+   {
+      input_event event = input::read_event(*curr_);
+//      input::string str = input::read_string(*curr_);
+   }
+}
+
+inline void display::add_win(window_ptr win)
+{
+   nodelay(*win, TRUE);
+   wins_.push_back(win);
+}
+
+inline void display::prerun()
+{apply_win(std::bind(&window::refresh, std::placeholders::_1));}
+
+inline void display::postloop()
+{apply_win(std::bind(&window::refresh, std::placeholders::_1));}
 
 inline void display::on_bounds_updated()
 {}

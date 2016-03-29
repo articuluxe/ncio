@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-14 07:36:46 dharms>
+// Modified Time-stamp: <2016-03-17 17:53:40 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -29,6 +29,7 @@
 #define __NCIO_NC_INPUT_HPP__
 
 #include "nc_config.hpp"
+#include "nc_window.hpp"
 
 #include <string>
 #include <ncurses.h>
@@ -37,6 +38,9 @@ namespace ncio {
 
 namespace input_mode {
 
+//----------------------------------------------------------------------------
+//---- mode ------------------------------------------------------------------
+//----------------------------------------------------------------------------
 struct mode
 {
    bool cooked = false;
@@ -48,6 +52,14 @@ constexpr mode raw{false};
 constexpr mode cooked{true};
 
 }   // end namespace input_mode
+
+//----------------------------------------------------------------------------
+//---- input_event -----------------------------------------------------------
+//----------------------------------------------------------------------------
+struct input_event
+{
+   int ch;
+};
 
 //----------------------------------------------------------------------------
 //---- input -----------------------------------------------------------------
@@ -70,8 +82,12 @@ class input
    void cleanup()
    {}
 
-   static int read_buffered();
-   static int read_raw();
+   static int read_buffered(const window& win);
+   static int read_raw(const window& win);
+
+   using input_events = std::vector<input_event>;
+   input_event read_event(const window& win)
+   { int ch = wgetch(*win); }
 
    class string
    {
@@ -83,18 +99,21 @@ class input
       void reset() { str_.clear(); }
 
 //      std::string read(mode md = buffered)
-      std::string read(input_mode::mode mode = input_mode::raw)
+      std::string read(const window& win
+         , input_mode::mode mode = input_mode::raw)
       {
-         str_.push_back(mode.cooked ? read_buffered() : read_raw());
+         str_.push_back(mode.cooked ? read_buffered(win) : read_raw(win));
          return str_;
       }
 
     private:
       std::string str_;
+      window_ptr win_;
    };
 
-   string read_string() const
-   { return string().read(input_mode::mode(cooked_)); }
+   string read_string(const window& win) const
+   { return string().read(win, input_mode::mode(cooked_)); }
+
 
  private:
    bool cooked_ = false;
@@ -104,21 +123,27 @@ inline bool input::init(config& /* cfg */)
 {
    noecho();                    /*don't echo keys*/
    raw();                       /*disable line buffering*/
+//   halfdelay(1);
    ESCDELAY = 0;                /*don't pause on ESC*/
    nonl();                      /*turn off newline conversions*/
    keypad(stdscr, TRUE);        /*TODO: move to window?*/
    return true;
 }
 
-/* static */ inline int input::read_buffered()
+/* static */ inline int input::read_buffered(const window& win)
 {
-   return getch();
+   return wgetch(win);
 }
 
-/* static */ inline int input::read_raw()
+/* static */ inline int input::read_raw(const window& win)
 {
-   return getch();
+   return wgetch(win);
 }
+
+/* /\* static *\/ inline input_event input::read_event() */
+/* { */
+/*    return input_event{}; */
+/* } */
 
 }   // end namespace ncio
 

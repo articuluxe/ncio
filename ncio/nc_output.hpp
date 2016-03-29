@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-15 17:51:35 dharms>
+// Modified Time-stamp: <2016-03-17 07:45:33 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -102,30 +102,8 @@ class stream : public std::ostream
 };
 
 //----------------------------------------------------------------------------
-//---- str -------------------------------------------------------------------
+//---- string ----------------------------------------------------------------
 //----------------------------------------------------------------------------
-class str
-{
- public:
-   str(window_ptr win)
-      : win_(win)
-   {}
-
-   stream operator()() const { return stream(win_); }
-
- private:
-   window_ptr win_;
-};
-
-inline std::ostream& operator<<(std::ostream& out, coord where)
-{
-   if (out.iword(stream::index()))
-   {
-      wmove(*static_cast<stream&>(out).get_win()
-         , std::get<1>(where), std::get<0>(where));
-   }
-   return out;
-}
 
 inline std::ostream& bold(std::ostream& out)
 {attron(A_BOLD); return out;}
@@ -137,12 +115,37 @@ class output
 {
  public:
    bool init(config& cfg);
+
+   class string
+   {
+    public:
+      string(window_ptr win)
+         : win_(win)
+      {}
+
+      stream operator()() const { return stream(win_); }
+
+    private:
+      window_ptr win_;
+   };
+
+
 };
 
 inline bool output::init(config& cfg)
 {
    curs_set(cfg.show_cursor ? TRUE : FALSE);
    return true;
+}
+
+inline std::ostream& operator<<(std::ostream& out, coord where)
+{
+   if (out.iword(stream::index()))
+   {
+      wmove(*static_cast<stream&>(out).get_win()
+         , std::get<1>(where), std::get<0>(where));
+   }
+   return out;
 }
 
 }   // end namespace ncio

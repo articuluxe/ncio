@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-11 07:33:41 dharms>
+// Modified Time-stamp: <2016-03-16 12:43:29 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -28,7 +28,7 @@
 #ifndef __NCIO_NCIO_HPP__
 #define __NCIO_NCIO_HPP__
 
-#include "nc_engine.hpp"
+#include "nc_context.hpp"
 
 namespace ncio {
 

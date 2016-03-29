@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
-// nc_engine.cpp --- ncio engine
+// nc_context.cpp --- ncio context
 // Copyright (C) 2016  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
-// Created: Thursday, March 10, 2016
+// Created: Wednesday, March 16, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-14 07:38:28 dharms>
+// Modified Time-stamp: <2016-03-16 12:38:48 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -25,7 +25,7 @@
 
 // Code:
 
-#include "nc_engine.hpp"
+#include "nc_context.hpp"
 #include "nc_signal.hpp"
 
 #include <csignal>
@@ -33,21 +33,21 @@
 namespace ncio {
 
 //----------------------------------------------------------------------------
-//---- engine ----------------------------------------------------------------
+//---- context ---------------------------------------------------------------
 //----------------------------------------------------------------------------
-engine::engine()
+context::context()
 {
    initscr();
    signal_handler::inst().register_cb(SIGWINCH,
-      std::bind(&engine::on_bounds_changed, this, std::placeholders::_1));
+      std::bind(&context::on_bounds_changed, this, std::placeholders::_1));
 }
 
-engine::~engine()
+context::~context()
 {
    endwin();
 }
 
-void engine::on_bounds_changed(int /* sig */)
+void context::on_bounds_changed(int /* sig */)
 {}
 
 }   // end namespace ncio

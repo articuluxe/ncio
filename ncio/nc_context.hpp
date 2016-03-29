@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Friday, March 11, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-11 07:16:06 dharms>
+// Modified Time-stamp: <2016-03-17 17:53:41 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -31,8 +31,10 @@
 #include "nc_config.hpp"
 #include "nc_display.hpp"
 #include "nc_input.hpp"
-
+#include "nc_output.hpp"
 #include <ncurses.h>
+
+namespace ncio {
 
 //----------------------------------------------------------------------------
 //---- context ---------------------------------------------------------------
@@ -40,25 +42,44 @@
 class context
 {
  public:
-   bool init(config& cfg);
-   void cleanup();
+   context();
+   ~context();
 
- private:
-   config cfg_;
+   bool init(config cfg = config{});
+   void cleanup()
+   {}
+   void prerun();
+   void postloop();
+
+   config& get_config() { return cfg_; }
+   output& get_output() { return outp_; }
+   display& get_display() { return disp_; }
+
+ protected:
+   config  cfg_;
+   output  outp_;
    display disp_;
+
+   void on_bounds_changed(int sig);
 };
 
-inline bool context::init(config& cfg)
+inline bool context::init(config cfg /* = config{} */)
 {
-   initscr();
-
-   disp_.init(cfg);
+   cfg_ = cfg;
+   if (!outp_.init(cfg_))
+      return false;
+   if (!disp_.init(cfg_))
+      return false;
    return true;
 }
 
-inline context::~context()
-{endwin();}
+inline void context::prerun()
+{disp_.prerun();}
 
+inline void context::postloop()
+{disp_.postloop();}
+
+}   // end namespace ncio
 
 #endif   /* #ifndef __NCIO_NC_CONTEXT_HPP__ */
 

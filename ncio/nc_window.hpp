@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-16 06:16:09 dharms>
+// Modified Time-stamp: <2016-03-17 07:45:33 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -28,6 +28,8 @@
 #ifndef __NCIO_NC_WINDOW_HPP__
 #define __NCIO_NC_WINDOW_HPP__
 
+//#include "nc_input.hpp"
+
 #include <memory>
 #include <tuple>
 #include <ncurses.h>
@@ -39,7 +41,7 @@ namespace ncio {
 //----------------------------------------------------------------------------
 struct coord : std::tuple<int, int>
 {
-   coord(int x, int y) : std::tuple<int, int>(y, x) {}
+   coord(int x, int y) : std::tuple<int, int>(x, y) {}
 };
 
 //----------------------------------------------------------------------------
@@ -47,7 +49,7 @@ struct coord : std::tuple<int, int>
 //----------------------------------------------------------------------------
 struct bounds : std::tuple<int, int>
 {
-   bounds(int x,  int y) : std::tuple<int, int>(y, x) {}
+   bounds(int x, int y) : std::tuple<int, int>(x, y) {}
 };
 
 //----------------------------------------------------------------------------
@@ -71,8 +73,9 @@ class window
    }
 
    operator WINDOW*() const { return win_; }
-
    void refresh() { wrefresh(win_); }
+   bounds get_bounds();         /*todo*/
+   /* input::string read_string(); */
 
    void make_box(int x, int y)
    { box(win_, x, y); }
@@ -81,6 +84,8 @@ class window
    WINDOW* win_;
 };
 
+/* inline input::string read_string() */
+/* {return input::string{}.read(*this);} */
 
 /* inline void del_win(WINDOW* /\* win *\/) */
 /* {} */

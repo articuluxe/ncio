@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-15 07:13:41 dharms>
+// Modified Time-stamp: <2016-03-17 07:58:23 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -28,45 +28,70 @@
 #ifndef __NCIO_NC_ENGINE_HPP__
 #define __NCIO_NC_ENGINE_HPP__
 
-#include "nc_config.hpp"
-#include "nc_input.hpp"
-#include "nc_output.hpp"
-#include "nc_display.hpp"
+#include "nc_context.hpp"
+#include <atomic>
 
 namespace ncio {
 
 //----------------------------------------------------------------------------
 //---- engine ----------------------------------------------------------------
 //----------------------------------------------------------------------------
+template <typename T>
 class engine
 {
  public:
    engine();
    ~engine();
+   context& get_ctx() { return ctx_; }
 
-   bool init(config cfg = config{});
-   void cleanup()
-   {}
+   bool init(config& cfg);
+   void run();
+   void halt() { run_ = false; }
+
+ protected:
+   context ctx_;
 
  private:
-   config cfg_;
-   input inp_;
-   output outp_;
-   display disp_;
+   std::atomic<bool> run_;
 
-   void on_bounds_changed(int sig);
+   void prerun() {}
+   void postrun() {}
+
+   bool loop(input_event event);
+
 };
 
-inline bool engine::init(config cfg /* = config{} */)
+template <typename T>
+engine<T>::engine()
+   : run_(false)
+{}
+
+template <typename T>
+engine<T>::~engine()
+{}
+
+template <typename T>
+inline bool engine<T>::init(config& cfg)
+{return ctx_.init(cfg);}
+
+template <typename T>
+inline void engine<T>::run()
 {
-   cfg_ = cfg;
-   if (!inp_.init(cfg_))
-      return false;
-   if (!outp_.init(cfg_))
-      return false;
-   if (!disp_.init(cfg_))
-      return false;
-   return true;
+   T* app = static_cast<T*>(this);
+   refresh();
+   run_ = true;
+   app->prerun();
+   ctx_.prerun();
+   while (run_)
+   {
+      input_event event = input::read_event();
+      run_ = app->loop(event);
+      /* app->preframe(); */
+      /* app->frame(); */
+      /* app->postframe(); */
+      ctx_.postloop();
+   }
+   app->postrun();
 }
 
 }   // end namespace ncio
