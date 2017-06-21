@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_input.hpp --- ncio input helpers
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-17 17:53:40 dharms>
+// Modified Time-stamp: <2017-04-11 08:31:13 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -32,6 +32,7 @@
 #include "nc_window.hpp"
 
 #include <string>
+#include <vector>
 #include <ncurses.h>
 
 namespace ncio {
@@ -87,7 +88,9 @@ class input
 
    using input_events = std::vector<input_event>;
    input_event read_event(const window& win)
-   { int ch = wgetch(*win); }
+   {
+      int ch = wgetch(win);
+   }
 
    class string
    {

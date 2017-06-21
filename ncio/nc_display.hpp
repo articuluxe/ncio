@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_display.hpp --- ncio display
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-17 17:53:40 dharms>
+// Modified Time-stamp: <2017-04-11 08:31:51 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -74,7 +74,7 @@ class display
 
 inline bool display::init(config& cfg)
 {
-   if (!inp_.init(cfg_))
+   if (!inp_.init(cfg))
       return false;
    if (!cfg.show_cursor)
       curs_set(FALSE);
@@ -85,7 +85,7 @@ inline input_event display::read_event()
 {
    if (curr_)
    {
-      input_event event = input::read_event(*curr_);
+      input_event event = inp_.read_event(*curr_);
 //      input::string str = input::read_string(*curr_);
    }
 }
