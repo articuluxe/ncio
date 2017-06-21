@@ -1,0 +1,27 @@
+;; -*- Mode: Emacs-Lisp -*-
+;;
+;;
+(proviso-define "ncio"
+ :initfun (lambda (proj)
+            (proviso-load-environment-variables-from-file proj ".repo-env")
+            (proviso-put
+             proj :proj-alist
+             `(
+               (:name "ncio" :dir "ncio")
+               (:name "boost" :dir "/usr/local/include/boost"
+                      :ctags-opts "--exclude=typeof --exclude=fusion --exclude=phoenix --exclude=spirit")
+               (:name "c++lib" :dir ,(substitute-env-vars "$CSTDLIB_INC")
+                      :ctags-opts "--language-force=c++ -h=\".h.H.hh.hpp.hxx.h++.inc.def.\"")
+               ))
+            (proviso-put
+             proj :build-subdirs
+             '(
+               (:name "dbg" :dir "debug" :register ?d)
+               (:name "rls" :dir "release" :register ?r)
+               ))
+            (add-hook 'proviso-hook-on-project-active
+                      (lambda (proj old)
+                        (add-to-list 'sml/replacer-regexp-list '("ncio/temp/" "TEMP:") t)
+                        ) t)
+            )
+ )
