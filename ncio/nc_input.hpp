@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-04-11 08:31:13 dharms>
+// Modified Time-stamp: <2017-07-07 08:27:31 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -59,6 +59,10 @@ constexpr mode cooked{true};
 //----------------------------------------------------------------------------
 struct input_event
 {
+   input_event() = default;
+   input_event(char c) : ch(c)
+   {}
+
    int ch;
 };
 
@@ -90,6 +94,7 @@ class input
    input_event read_event(const window& win)
    {
       int ch = wgetch(win);
+      return ch;
    }
 
    class string

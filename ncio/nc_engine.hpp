@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_engine.hpp --- ncio engine
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-17 07:58:23 dharms>
+// Modified Time-stamp: <2017-07-07 08:28:01 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -84,7 +84,7 @@ inline void engine<T>::run()
    ctx_.prerun();
    while (run_)
    {
-      input_event event = input::read_event();
+      input_event event = ctx_.get_display().read_event();
       run_ = app->loop(event);
       /* app->preframe(); */
       /* app->frame(); */
