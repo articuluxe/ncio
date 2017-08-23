@@ -7,7 +7,8 @@
             (proviso-put
              proj :proj-alist
              `(
-               (:name "ncio" :dir "ncio")
+               (:name "ncio" :dir "src/ncio")
+               (:name "gtest" :dir "ext/googletest/googletest/include")
                (:name "boost" :dir "/usr/local/include/boost"
                       :ctags-opts "--exclude=typeof --exclude=fusion --exclude=phoenix --exclude=spirit")
                (:name "c++lib" :dir ,(substitute-env-vars "$CSTDLIB_INC")

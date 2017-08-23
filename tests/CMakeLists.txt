@@ -1,6 +1,6 @@
 # tests
-ADD_DEFINITIONS("-DPUNCH_TEST_ROOT=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}")
+ADD_DEFINITIONS("-DNCIO_TEST_ROOT=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/src")
 
 FIND_PACKAGE(Threads REQUIRED)
 ENABLE_TESTING()
@@ -13,7 +13,11 @@ FOREACH(src ${srcs})
   MESSAGE(STATUS "Creating unit test ${unit_test}")
   ADD_EXECUTABLE(${unit_test}_test EXCLUDE_FROM_ALL ${src})
   ADD_TEST(${unit_test}_test ${unit_test}_test)
-  TARGET_LINK_LIBRARIES(${unit_test}_test ${project} stdc++ ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+  TARGET_LINK_LIBRARIES(${unit_test}_test gtest gtest_main)
+  if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	SET(RTLIB -lrt)
+  ENDIF()
+  TARGET_LINK_LIBRARIES(${unit_test}_test ${project} stdc++ ${CMAKE_THREAD_LIBS_INIT} ${RTLIB})
   ADD_DEPENDENCIES(check ${unit_test}_test)
 ENDFOREACH(src)
 

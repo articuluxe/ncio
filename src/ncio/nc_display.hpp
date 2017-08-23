@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-07-07 08:27:06 dharms>
+// Modified Time-stamp: <2017-08-22 17:24:40 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -32,6 +32,7 @@
 #include "nc_input.hpp"
 #include "nc_config.hpp"
 #include <algorithm>
+#include <functional>
 #include <vector>
 #include <ncurses.h>
 

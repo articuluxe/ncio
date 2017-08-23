@@ -3,32 +3,41 @@ SET(project ncio)
 SET(subdir ${project})
 PROJECT(${project} CXX C)
 
-#SET_PROPERTY(TARGET ${project} PROPERTY CXX_STANDARD 14)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{CXX_FLAGS}")
+############################## compile settings ##############################
+# choose the language standard
+SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+SET(CMAKE_CXX_EXTENSIONS OFF)
+# strip symbols from release builds
+SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+# compile flags
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wno-unused-local-typedefs")
 SET(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 # flag used for abi compatibility post-gcc-5.1
 ADD_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=0 -D${project}_STATIC)
 
 # main library
-FILE(GLOB srcs ${PROJECT_SOURCE_DIR}/${subdir}/*.cpp)
+FILE(GLOB srcs ${PROJECT_SOURCE_DIR}/src/${subdir}/*.cpp)
 ADD_LIBRARY(${project} STATIC ${srcs})
-
-FIND_PACKAGE(Boost 1.60 COMPONENTS unit_test_framework regex REQUIRED)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
+# google test
+ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/ext/googletest)
+INCLUDE_DIRECTORIES(${gtest_SOURCE_DIR} ${gtest_SOURCE_DIR}/include)
+# Doxygen
 FIND_PACKAGE(Doxygen)
 INCLUDE_DIRECTORIES(/usr/local/include)
+# Curses
 FIND_PACKAGE(Curses REQUIRED)
 INCLUDE_DIRECTORIES(${CURSES_INCLUDE_DIR})
 
 # version
 SET(${project}_VERSION 1.0)
-CONFIGURE_FILE(${subdir}/version_config.h.in ${CMAKE_BINARY_DIR}/generated/version_config.h)
+CONFIGURE_FILE(src/${subdir}/version_config.h.in ${CMAKE_BINARY_DIR}/generated/version_config.h)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/generated/)
 
 # documentation
 FILE(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc/html)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
+CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/src/Doxyfile.in
   ${CMAKE_BINARY_DIR}/Doxyfile @ONLY)
 ADD_CUSTOM_TARGET(doc ${DOXYGEN_EXECUTABLE}
   ${CMAKE_BINARY_DIR}/Doxyfile
@@ -38,7 +47,7 @@ ADD_CUSTOM_TARGET(doc ${DOXYGEN_EXECUTABLE}
 
 # installation
 SET(CMAKE_INSTALL_PREFIX "$ENV{HOME}")
-FILE(GLOB headers ${PROJECT_SOURCE_DIR}/${subdir}/*.hpp)
+FILE(GLOB headers ${PROJECT_SOURCE_DIR}/src/${subdir}/*.hpp)
 INSTALL(FILES ${headers} DESTINATION include/${project})
 INSTALL(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html DESTINATION doc/${project})
 INSTALL(TARGETS ${project}
