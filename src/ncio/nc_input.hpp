@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-07-07 08:27:31 dharms>
+// Modified Time-stamp: <2017-08-28 17:39:23 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -72,16 +72,6 @@ struct input_event
 class input
 {
  public:
-
-   /* struct mode */
-   /* { */
-   /*    bool buffered; */
-   /*    mode() = default; */
-   /*    constexpr mode(bool b) : buffered(b) {} */
-   /* }; */
-
-   /* static constexpr input::mode buffered{true}; */
-   /* static constexpr input::mode unbuffered{false}; */
 
    bool init(config& cfg);
    void cleanup()

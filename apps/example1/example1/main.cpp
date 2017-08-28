@@ -15,6 +15,7 @@ class example_app : public ncio::engine<example_app>
 
  private:
    ncio::window_ptr win_;
+   ncio::input::string str_;
 };
 
 /* bool example_app::init(ncio::config& cfg) */
@@ -31,10 +32,10 @@ void example_app::prerun()
 
 bool example_app::loop(ncio::input_event event)
 {
-   ncio::input::string str;     /*todo*/
-
    ncio::output::string log(win_);
-   log() << ncio::coord(1, 18) << "Entered " << str.str();
+   log() << ncio::coord(1, 18) << "Entered " << str_.str();
+   if (event.ch == 'q')
+      return false;
    return true;
 }
 

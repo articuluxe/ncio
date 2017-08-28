@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_output.hpp --- ncio output helpers
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-17 07:45:33 dharms>
+// Modified Time-stamp: <2017-08-28 17:44:36 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -101,10 +101,6 @@ class stream : public std::ostream
    buf buf_;
 };
 
-//----------------------------------------------------------------------------
-//---- string ----------------------------------------------------------------
-//----------------------------------------------------------------------------
-
 inline std::ostream& bold(std::ostream& out)
 {attron(A_BOLD); return out;}
 
@@ -128,7 +124,6 @@ class output
     private:
       window_ptr win_;
    };
-
 
 };
 

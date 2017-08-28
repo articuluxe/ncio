@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-08-22 17:24:40 dharms>
+// Modified Time-stamp: <2017-08-28 17:37:59 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -90,7 +90,7 @@ inline input_event display::read_event()
       return event;
 //      input::string str = input::read_string(*curr_);
    }
-   return input_event();
+   return input_event{};
 }
 
 inline void display::add_win(window_ptr win)
