@@ -1,13 +1,13 @@
 ;; -*- Mode: Emacs-Lisp -*-
 ;;
 ;;
-(proviso-define "ncio"
+(proviso-define-project "ncio"
  :initfun (lambda (proj)
             (proviso-load-environment-variables-from-file proj ".repo-env")
             (proviso-put
              proj :proj-alist
              `(
-               (:name "ncio" :dir "src/ncio")
+               (:name "ncio" :dir "src")
                (:name "gtest" :dir "ext/googletest/googletest/include")
                (:name "boost" :dir "/usr/local/include/boost"
                       :ctags-opts "--exclude=typeof --exclude=fusion --exclude=phoenix --exclude=spirit")
