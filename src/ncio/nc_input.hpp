@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-08-28 17:39:23 dharms>
+// Modified Time-stamp: <2017-08-29 08:27:04 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -96,7 +96,6 @@ class input
       std::string str() const { return str_; }
       void reset() { str_.clear(); }
 
-//      std::string read(mode md = buffered)
       std::string read(const window& win
          , input_mode::mode mode = input_mode::raw)
       {
@@ -137,11 +136,6 @@ inline bool input::init(config& /* cfg */)
 {
    return wgetch(win);
 }
-
-/* /\* static *\/ inline input_event input::read_event() */
-/* { */
-/*    return input_event{}; */
-/* } */
 
 }   // end namespace ncio
 

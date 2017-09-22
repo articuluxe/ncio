@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-08-28 17:44:36 dharms>
+// Modified Time-stamp: <2017-08-29 08:25:26 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -46,7 +46,7 @@ class buf : public std::stringbuf
    {}
    buf(buf&& rhs)
       : std::stringbuf(std::move(rhs))
-      , win_(rhs.win_)
+      , win_(std::move(rhs.win_))
    {}
    ~buf() { sync(); }
 
@@ -70,22 +70,16 @@ struct buf_wrapper
 //----------------------------------------------------------------------------
 //---- stream ----------------------------------------------------------------
 //----------------------------------------------------------------------------
-/* class stream : private buf_wrapper */
-/*              , public std::ostream */
 class stream : public std::ostream
 {
  public:
    stream(window_ptr win)
       : std::ostream(&buf_)
       , buf_(win)
-      /* : buf_wrapper(win) */
-      /* , std::ostream(&b) */
    {
       iword(index()) = 1;
    }
    stream(stream&& rhs)
-      /* : buf_wrapper(std::move(rhs)) */
-      /* , std::ostream(std::move(rhs)) */
       : buf_(std::move(rhs.buf_))
    {}
 

@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-08-28 17:37:59 dharms>
+// Modified Time-stamp: <2017-09-27 08:47:17 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -62,7 +62,7 @@ class display
    void add_win(window_ptr win);
 
    template <typename Fun>
-   void apply_win(Fun fun)
+   void apply_to_windows(Fun fun)
    {
       std::for_each(wins_.begin(), wins_.end(), fun);
    }
@@ -96,14 +96,14 @@ inline input_event display::read_event()
 inline void display::add_win(window_ptr win)
 {
    nodelay(*win, TRUE);
-   wins_.push_back(win);
+   wins_.emplace_back(win);
 }
 
 inline void display::prerun()
-{apply_win(std::bind(&window::refresh, std::placeholders::_1));}
+{apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));}
 
 inline void display::postloop()
-{apply_win(std::bind(&window::refresh, std::placeholders::_1));}
+{apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));}
 
 inline void display::on_bounds_updated()
 {}

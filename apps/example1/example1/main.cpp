@@ -32,11 +32,12 @@ void example_app::prerun()
 
 bool example_app::loop(ncio::input_event event)
 {
+   bool keep_running = true;
    ncio::output::string log(win_);
    log() << ncio::coord(1, 18) << "Entered " << str_.str();
    if (event.ch == 'q')
-      return false;
-   return true;
+      keep_running = false;
+   return keep_running;
 }
 
 /* void example_app::preframe() */
