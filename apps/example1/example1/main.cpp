@@ -14,7 +14,8 @@ class example_app : public ncio::engine<example_app>
    //  void postrun();
 
  private:
-   ncio::window_ptr win_;
+   ncio::window_ptr win_;       /*should maybe hide access to this in the
+                                 * library*/
    ncio::input::string str_;
 };
 
@@ -34,21 +35,31 @@ bool example_app::loop(ncio::input_event event)
 {
    bool keep_running = true;
    ncio::output::string log(win_);
-   log() << ncio::coord(1, 18) << "Entered " << str_.str();
+   auto str = log();
+   if (event.ch)
+   {
+      str << "Entered ";
+      int val = event.ch;
+      char ch = event.ch;
+      if (ch)
+      {
+         str << ch << ncio::bold << " (" << val << ")";
+         /* s += ch; */
+         /* s += "( "; */
+         /* s += std::to_string(val); */
+         /* s += ")"; */
+      }
+      /* else str << "null"; */
+      /* else s += "null"; */
+
+      str << ncio::coord(2, 5) << std::flush;
+      /* log() << ncio::coord(2, 10) << s; */
+   }
+
    if (event.ch == 'q')
       keep_running = false;
    return keep_running;
 }
-
-/* void example_app::preframe() */
-/* {get_ctx().get_input().read_raw();} */
-
-/* void example_app::frame() */
-/* { */
-/* } */
-
-/* void example_app::postrun() */
-/* {} */
 
 int main(int /* argc */, char* /* argv */[])
 {
@@ -59,13 +70,6 @@ int main(int /* argc */, char* /* argv */[])
       return 1;
 
    app.run();
-
-   /* refresh(); */
-   /* window->refresh(); */
-
-
-   /* window->refresh(); */
-
 
    return 0;
 }

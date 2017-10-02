@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-09-27 08:47:17 dharms>
+// Modified Time-stamp: <2017-09-29 13:33:43 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -51,6 +51,7 @@ class display
    input_event read_event();
 
    void prerun();
+   void preloop();
    void postloop();
 
    void on_bounds_updated();
@@ -96,14 +97,25 @@ inline input_event display::read_event()
 inline void display::add_win(window_ptr win)
 {
    nodelay(*win, TRUE);
+   keypad(*win, TRUE);
    wins_.emplace_back(win);
+   curr_ = wins_.back();
 }
 
 inline void display::prerun()
-{apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));}
+{
+   apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));
+}
+
+inline void display::preloop()
+{
+   apply_to_windows(std::bind(&window::clear, std::placeholders::_1));
+}
 
 inline void display::postloop()
-{apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));}
+{
+   apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));
+}
 
 inline void display::on_bounds_updated()
 {}

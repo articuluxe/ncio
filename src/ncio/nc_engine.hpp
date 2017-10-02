@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-07-07 08:28:01 dharms>
+// Modified Time-stamp: <2017-10-02 08:51:16 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -30,6 +30,8 @@
 
 #include "nc_context.hpp"
 #include <atomic>
+#include <chrono>
+#include <thread>
 
 namespace ncio {
 
@@ -82,14 +84,21 @@ inline void engine<T>::run()
    run_ = true;
    app->prerun();
    ctx_.prerun();
+   input_event event = ctx_.get_display().read_event();
    while (run_)
    {
-      input_event event = ctx_.get_display().read_event();
+      ctx_.preloop();
       run_ = app->loop(event);
+      ctx_.postloop();
+      event.clear();
+      while (run_ && !event)
+      {
+         std::this_thread::sleep_for(std::chrono::milliseconds(50));
+         event = ctx_.get_display().read_event();
+      }
       /* app->preframe(); */
       /* app->frame(); */
       /* app->postframe(); */
-      ctx_.postloop();
    }
    app->postrun();
 }

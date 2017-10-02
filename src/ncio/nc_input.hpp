@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-08-29 08:27:04 dharms>
+// Modified Time-stamp: <2017-10-02 08:52:08 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -64,6 +64,11 @@ struct input_event
    {}
 
    int ch;
+
+   explicit operator bool() const
+   { return ch; }
+
+   void clear() { ch = 0; }
 };
 
 //----------------------------------------------------------------------------
@@ -84,6 +89,8 @@ class input
    input_event read_event(const window& win)
    {
       int ch = wgetch(win);
+      if (ch == ERR)
+         return 0;
       return ch;
    }
 
@@ -123,7 +130,6 @@ inline bool input::init(config& /* cfg */)
 //   halfdelay(1);
    ESCDELAY = 0;                /*don't pause on ESC*/
    nonl();                      /*turn off newline conversions*/
-   keypad(stdscr, TRUE);        /*TODO: move to window?*/
    return true;
 }
 

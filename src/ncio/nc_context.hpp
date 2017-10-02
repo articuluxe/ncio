@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_context.hpp --- ncio context
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Friday, March 11, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-17 17:53:41 dharms>
+// Modified Time-stamp: <2017-09-29 12:57:15 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -49,6 +49,7 @@ class context
    void cleanup()
    {}
    void prerun();
+   void preloop();
    void postloop();
 
    config& get_config() { return cfg_; }
@@ -75,6 +76,9 @@ inline bool context::init(config cfg /* = config{} */)
 
 inline void context::prerun()
 {disp_.prerun();}
+
+inline void context::preloop()
+{disp_.preloop();}
 
 inline void context::postloop()
 {disp_.postloop();}

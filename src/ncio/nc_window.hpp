@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_window.hpp --- ncio window
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-17 07:45:33 dharms>
+// Modified Time-stamp: <2017-09-29 13:33:44 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -61,10 +61,12 @@ class window
    window(bounds extent, coord origin)
       : win_(newwin(std::get<1>(extent), std::get<0>(extent),
             std::get<1>(origin), std::get<0>(origin)))
-   {}
+   {
+   }
    window(WINDOW* win)
       : win_(win)
-   {}
+   {
+   }
 
    ~window()
    {
@@ -74,6 +76,7 @@ class window
 
    operator WINDOW*() const { return win_; }
    void refresh() { wrefresh(win_); }
+   void clear() { wclear(win_); }
    bounds get_bounds();         /*todo*/
    /* input::string read_string(); */
 
