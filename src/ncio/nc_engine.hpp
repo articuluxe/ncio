@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-10-02 08:51:16 dharms>
+// Modified Time-stamp: <2017-10-02 17:29:16 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -80,25 +80,22 @@ template <typename T>
 inline void engine<T>::run()
 {
    T* app = static_cast<T*>(this);
-   refresh();
    run_ = true;
+   auto& display = ctx_.get_display();
    app->prerun();
-   ctx_.prerun();
+
    input_event event = ctx_.get_display().read_event();
    while (run_)
    {
-      ctx_.preloop();
+      display.preframe();
       run_ = app->loop(event);
-      ctx_.postloop();
+      display.postframe();
       event.clear();
       while (run_ && !event)
       {
          std::this_thread::sleep_for(std::chrono::milliseconds(50));
          event = ctx_.get_display().read_event();
       }
-      /* app->preframe(); */
-      /* app->frame(); */
-      /* app->postframe(); */
    }
    app->postrun();
 }

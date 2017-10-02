@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Friday, March 11, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-09-29 12:57:15 dharms>
+// Modified Time-stamp: <2017-10-02 17:23:49 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -48,9 +48,6 @@ class context
    bool init(config cfg = config{});
    void cleanup()
    {}
-   void prerun();
-   void preloop();
-   void postloop();
 
    config& get_config() { return cfg_; }
    output& get_output() { return outp_; }
@@ -73,15 +70,6 @@ inline bool context::init(config cfg /* = config{} */)
       return false;
    return true;
 }
-
-inline void context::prerun()
-{disp_.prerun();}
-
-inline void context::preloop()
-{disp_.preloop();}
-
-inline void context::postloop()
-{disp_.postloop();}
 
 }   // end namespace ncio
 

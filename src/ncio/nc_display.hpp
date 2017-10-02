@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-09-29 13:33:43 dharms>
+// Modified Time-stamp: <2017-10-02 17:27:16 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -51,8 +51,8 @@ class display
    input_event read_event();
 
    void prerun();
-   void preloop();
-   void postloop();
+   void preframe();
+   void postframe();
 
    void on_bounds_updated();
    struct screen
@@ -107,12 +107,12 @@ inline void display::prerun()
    apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));
 }
 
-inline void display::preloop()
+inline void display::preframe()
 {
    apply_to_windows(std::bind(&window::clear, std::placeholders::_1));
 }
 
-inline void display::postloop()
+inline void display::postframe()
 {
    apply_to_windows(std::bind(&window::refresh, std::placeholders::_1));
 }
