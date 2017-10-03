@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-09-29 13:33:44 dharms>
+// Modified Time-stamp: <2017-10-03 08:34:00 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -27,8 +27,6 @@
 
 #ifndef __NCIO_NC_WINDOW_HPP__
 #define __NCIO_NC_WINDOW_HPP__
-
-//#include "nc_input.hpp"
 
 #include <memory>
 #include <tuple>
@@ -75,17 +73,37 @@ class window
    }
 
    operator WINDOW*() const { return win_; }
+
    void refresh() { wrefresh(win_); }
    void clear() { wclear(win_); }
-   bounds get_bounds();         /*todo*/
+   void draw();
+
+   bounds get_bounds() const;
    /* input::string read_string(); */
 
-   void make_box(int x, int y)
-   { box(win_, x, y); }
+   bool getBorder() const { return border_; }
+   void setBorder(bool val) { border_ = val; }
 
  private:
    WINDOW* win_;
+   bool border_ = true;
 };
+
+inline bounds window::get_bounds() const
+{
+   int x, y;
+   getmaxyx(win_, y, x);
+   bounds ret(x, y);
+   return ret;
+}
+
+inline void window::draw()
+{
+   if (border_)
+   {
+      box(win_, '|', '-');
+   }
+}
 
 /* inline input::string read_string() */
 /* {return input::string{}.read(*this);} */
@@ -97,16 +115,6 @@ using window_ptr = std::shared_ptr<window>;
 
 inline window_ptr make_std_win()
 {return std::shared_ptr<window>(new ncio::window(stdscr));}
-
-/* inline window_ptr make_window(coord origin, bounds extent) */
-/* { */
-/*    return window_ptr(window(newwin( */
-/*             std::get<0>(origin), std::get<1>(origin), */
-/*             std::get<0>(extent), std::get<1>(extent))) */
-/*       , del_win); */
-/* } */
-
-/* inline void del_win(WINDOW* win) {delwin(win);} */
 
 }   // end namespace ncio
 

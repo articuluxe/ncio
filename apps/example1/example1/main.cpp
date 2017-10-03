@@ -9,32 +9,21 @@ class example_app : public ncio::engine<example_app>
    void prerun();
    bool loop(ncio::input_event event);
 
-   /* void preframe(); */
-   /* void frame(); */
-   //  void postrun();
-
  private:
-   ncio::window_ptr win_;       /*should maybe hide access to this in the
-                                 * library*/
    ncio::input::string str_;
 };
 
-/* bool example_app::init(ncio::config& cfg) */
-/* {return ncio::engine<example_app>::init(cfg);} */
-
 void example_app::prerun()
 {
-   win_ = std::make_shared<ncio::window>(
+   ncio::window_ptr win = std::make_shared<ncio::window>(
       ncio::bounds(25, 25), ncio::coord(1, 1));
-      /* ncio::make_std_win(); */
-   get_ctx().get_display().add_win(win_);
-   win_->make_box(0, 0);
+   get_ctx().get_display().add_win(win);
 }
 
 bool example_app::loop(ncio::input_event event)
 {
    bool keep_running = true;
-   ncio::output::string log(win_);
+   ncio::output::string log = get_ctx().get_display().get_output();
    auto str = log();
    if (event.ch)
    {
@@ -44,16 +33,9 @@ bool example_app::loop(ncio::input_event event)
       if (ch)
       {
          str << ch << ncio::bold << " (" << val << ")";
-         /* s += ch; */
-         /* s += "( "; */
-         /* s += std::to_string(val); */
-         /* s += ")"; */
       }
-      /* else str << "null"; */
-      /* else s += "null"; */
 
       str << ncio::coord(2, 5) << std::flush;
-      /* log() << ncio::coord(2, 10) << s; */
    }
 
    if (event.ch == 'q')

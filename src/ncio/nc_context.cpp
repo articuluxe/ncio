@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_context.cpp --- ncio context
-// Copyright (C) 2016  Dan Harms (dharms)
+// Copyright (C) 2016-2017  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March 16, 2016
 // Version: 1.0
-// Modified Time-stamp: <2016-03-16 12:38:48 dharms>
+// Modified Time-stamp: <2017-10-02 17:41:10 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -48,7 +48,9 @@ context::~context()
 }
 
 void context::on_bounds_changed(int /* sig */)
-{}
+{
+   disp_.on_bounds_updated();
+}
 
 }   // end namespace ncio
 

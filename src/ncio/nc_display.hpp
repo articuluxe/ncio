@@ -4,7 +4,7 @@
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Thursday, March 10, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-10-02 17:27:16 dharms>
+// Modified Time-stamp: <2017-10-02 17:56:58 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurss c++
 
@@ -30,6 +30,7 @@
 
 #include "nc_window.hpp"
 #include "nc_input.hpp"
+#include "nc_output.hpp"
 #include "nc_config.hpp"
 #include <algorithm>
 #include <functional>
@@ -49,6 +50,7 @@ class display
    {}
    input& get_input() { return inp_; }
    input_event read_event();
+   output::string get_output() { return output::string(curr_); }
 
    void prerun();
    void preframe();
@@ -110,6 +112,7 @@ inline void display::prerun()
 inline void display::preframe()
 {
    apply_to_windows(std::bind(&window::clear, std::placeholders::_1));
+   apply_to_windows(std::bind(&window::draw, std::placeholders::_1));
 }
 
 inline void display::postframe()
