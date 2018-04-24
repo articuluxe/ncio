@@ -20,6 +20,12 @@
                (:name "dbg" :dir "debug" :register ?d)
                (:name "rls" :dir "release" :register ?r)
                ))
+            (proviso-put
+             proj :debug-subdirs
+             '(
+               (:name "DEBUG" :dir "debug")
+               (:name "RELEASE" :dir "release")
+               ))
             (add-hook 'proviso-hook-on-project-active
                       (lambda (proj old)
                         (add-to-list 'sml/replacer-regexp-list '("ncio/temp/" "TEMP:") t)
