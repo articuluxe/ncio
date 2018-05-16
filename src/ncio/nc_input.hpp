@@ -1,10 +1,10 @@
 // -*- Mode: c++ -*-
 // nc_input.hpp --- ncio input helpers
-// Copyright (C) 2016-2017  Dan Harms (dharms)
+// Copyright (C) 2016-2018  Dan Harms (dharms)
 // Author: Dan Harms <danielrharms@gmail.com>
 // Created: Wednesday, March  9, 2016
 // Version: 1.0
-// Modified Time-stamp: <2017-10-02 08:52:08 dharms>
+// Modified Time-stamp: <2018-05-16 07:08:58 dharms>
 // Modified by: Dan Harms
 // Keywords: ncurses c++
 
@@ -63,10 +63,10 @@ struct input_event
    input_event(char c) : ch(c)
    {}
 
-   int ch;
+   int ch {};
 
    explicit operator bool() const
-   { return ch; }
+   { return ch != 0; }
 
    void clear() { ch = 0; }
 };
