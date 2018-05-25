@@ -2,6 +2,7 @@
 ;;
 ;;
 (proviso-define-project "ncio"
+ :compile-cmds '("make" "genbuild.sh")
  :initfun (lambda (proj)
             (proviso-load-environment-variables-from-file proj ".repo-env")
             (proviso-put
