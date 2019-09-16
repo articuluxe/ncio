@@ -1,35 +1,16 @@
-;; -*- Mode: Emacs-Lisp -*-
-;;
-;;
-(proviso-define-project "ncio"
- :compile-cmds '("make" "genbuild.sh")
+(:compile-cmds ("make" "genbuild.sh")
+ :build-subdirs ((:name "dbg" :dir "debug" :register ?d)
+                (:name "rls" :dir "release" :register ?r))
+ :debug-subdirs ((:name "DEBUG" :dir "debug")
+                (:name "RELEASE" :dir "release"))
+ :env-file ".repo-env"
  :initfun (lambda (proj)
-            (proviso-load-environment-variables-from-file proj ".repo-env")
             (proviso-put
              proj :proj-alist
-             `(
-               (:name "ncio" :dir "src")
+             `((:name "ncio" :dir "src")
                (:name "gtest" :dir "ext/googletest/googletest/include")
                (:name "boost" :dir "/usr/local/include/boost"
                       :ctags-opts "--exclude=typeof --exclude=fusion --exclude=phoenix --exclude=spirit")
                (:name "c++lib" :dir ,(substitute-env-vars "$CSTDLIB_INC")
-                      :ctags-opts "--language-force=c++ -h=\".h.H.hh.hpp.hxx.h++.inc.def.\"")
-               ))
-            (proviso-put
-             proj :build-subdirs
-             '(
-               (:name "dbg" :dir "debug" :register ?d)
-               (:name "rls" :dir "release" :register ?r)
-               ))
-            (proviso-put
-             proj :debug-subdirs
-             '(
-               (:name "DEBUG" :dir "debug")
-               (:name "RELEASE" :dir "release")
-               ))
-            (add-hook 'proviso-hook-on-project-active
-                      (lambda (proj old)
-                        (add-to-list 'sml/replacer-regexp-list '("ncio/temp/" "TEMP:") t)
-                        ) t)
-            )
- )
+                      :ctags-opts "--language-force=c++ -h=.h.H.hh.hpp.hxx.h++.inc.def.")
+               ))))
