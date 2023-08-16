@@ -56,5 +56,9 @@ INSTALL(TARGETS ${project}
   ARCHIVE DESTINATION lib
   )
 
+# custom targets
+add_custom_target(format COMMAND ${CMAKE_COMMAND} -E env clang-format -i ${CMAKE_SOURCE_DIR}/src/ncio/*.hpp)
+add_custom_target(tidy COMMAND ${CMAKE_COMMAND} -E env clang-tidy ${CMAKE_SOURCE_DIR}/src/ncio/*.hpp -extra-arg=std=c++17)
+
 ADD_SUBDIRECTORY(tests)
 ADD_SUBDIRECTORY(apps)
